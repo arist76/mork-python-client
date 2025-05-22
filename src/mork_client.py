@@ -60,8 +60,13 @@ class MorkClient:
             path=f"/count/{path}"
         )
 
-    async def export(self):
-        pass
+    async def export(self, expr: str):
+        path = quote(await self._mork_to_path(expr))
+
+        return await self._request(
+            method="GET",
+            path=f"/export/{path}"
+        )
 
     async def import_(self):
         pass
