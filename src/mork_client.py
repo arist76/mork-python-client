@@ -41,44 +41,55 @@ class MorkClient:
 
         return path
 
-    async def busywait(self, timeout: int = 2000):
-        await self._request(method="GET", path=f"/busywait/{timeout}")
+    async def busywait(self, timeout: int = 2000, **kwargs):
+        await self._request(method="GET", path=f"/busywait/{timeout}", **kwargs)
 
-    async def clear(self, expr: str):
+    async def clear(self, expr: str, **kwargs):
         path = quote(expr.strip())
 
         return await self._request(
             method="GET",
-            path=f"/clear/{path}"
+            path=f"/clear/{path}",
+            **kwargs
         )
 
-    async def count(self, expr: str):
+    async def count(self, expr: str, **kwargs):
         path = quote(expr.strip())
 
         return await self._request(
             method="GET",
-            path=f"/count/{path}"
+            path=f"/count/{path}",
+            **kwargs
         )
 
-    async def export(self, expr: str):
+    async def export(self, expr: str, **kwargs):
         path = quote(await self._mork_to_path(expr))
 
         return await self._request(
             method="GET",
-            path=f"/export/{path}"
+            path=f"/export/{path}",
+            **kwargs
         )
 
-    async def import_(self):
-        pass
+    async def import_(self, expr: str, **kwargs):
+        path = quote(await self._mork_to_path(expr))
+
+        print("path: ", path)
+        return await self._request(
+            method="GET",
+            path=f"/import/{path}",
+            **kwargs
+        )
 
     async def status(self):
         pass
 
-    async def stop(self):
+    async def stop(self, **kwargs):
+        kwargs["wait_for_idle"] = ""  # must be set
         return await self._request(
             method="GET",
             path="/stop/",
-            params={"wait_for_idle": ""}
+            **kwargs
         )
 
     async def upload(self):
