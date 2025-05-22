@@ -98,8 +98,24 @@ class MorkClient:
             **kwargs
         )
 
-    async def upload(self):
-        pass
+    async def upload(self, expr: str, payload: str, **kwargs):
+
+        path = quote(await self._mork_to_path(expr))
+
+        if kwargs.get("headers") is None:
+            kwargs["headers"] = {
+                "Content-Type": "text/plain"
+            }
+        else: 
+            kwargs["headers"]["Content-Type"] = "text/plain"
+            kwargs["headers"]["content-type"] = "text/plain"
+
+        return await self._request(
+            method="POST",
+            path=f"/upload/{path}",
+            content=payload,
+            **kwargs
+        )
 
     async def transform(self):
         pass
