@@ -117,15 +117,35 @@ class MorkClient:
             **kwargs
         )
 
-    async def transform(self):
-        pass
+    async def transform(self, expr: str, payload: str, **kwargs):
+        path = quote(await self._mork_to_path(expr))
+
+        if kwargs.get("headers") is None:
+            kwargs["headers"] = {
+                "Content-Type": "text/plain"
+            }
+        else: 
+            kwargs["headers"]["Content-Type"] = "text/plain"
+            kwargs["headers"]["content-type"] = "text/plain"
+
+
+        return await self._request(
+            method="POST",
+            path=f"/transform/{path}",
+            content=payload,
+            **kwargs
+        )
+
 
     async def metta_thread(self):
-        pass
+        print("Not implemented")
 
     async def metta_thread_suspend(self):
-        pass
+        print("Not implemented")
+
 
     async def transform_multi_multi(self):
-        pass
+        print("Not implemented")
+
+
 
