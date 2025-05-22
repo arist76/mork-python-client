@@ -81,8 +81,14 @@ class MorkClient:
             **kwargs
         )
 
-    async def status(self):
-        pass
+    async def status(self, expr: str, **kwargs):
+        path = quote(expr.strip())
+
+        return await self._request(
+            method="GET",
+            path=f"/status/{path}",
+            **kwargs
+        )
 
     async def stop(self, **kwargs):
         kwargs["wait_for_idle"] = ""  # must be set
