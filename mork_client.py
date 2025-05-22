@@ -9,7 +9,7 @@ class MorkClient:
         if url is None:
             raise ValueError(
                 "MORK_URL environment variable is not set. Please set it using \
-                `export MORK_URL=http://localhost:8000`."
+                `export MORK_URL=http://localhost:8000/`."
             )
 
         if isinstance(url, URL):
@@ -19,10 +19,16 @@ class MorkClient:
         if isinstance(url, str):
             url = url.strip()
 
-        self.url = URL(url)
+        self.url: URL = URL(url)
 
-    async def _request(self, *args, **kwargs):
+    async def _request(self, method: str = "GET", path: str = "", **kwargs):
         """request mork api, *args and **kwargs are valid httpx.request arguments"""
 
+
+        assert path.startswith("/"), "Path must start with /"
+
+        url = self.url.copy_with(path=path)
+
         async with httpx.AsyncClient() as client:
-            return await client.request(*args, **kwargs)
+            return await client.request(method, url, **kwargs)
+
